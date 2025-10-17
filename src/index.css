@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Creepster&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nosifer&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -10,6 +12,8 @@
   --font-sora: "Sora", sans-serif;
   --font-code: "Source Code Pro", monospace;
   --font-grotesk: "Space Grotesk", sans-serif;
+  --font-creepster: "Creepster", cursive;
+  --font-nosifer: "Nosifer", cursive;
   color-scheme: dark;
 }
 
@@ -85,4 +89,87 @@
 
 .-rotate-360 {
   @apply rotate-[-360deg]
+}
+
+/* Halloween Theme Styles */
+.halloween-glow {
+  text-shadow: 0 0 10px #FF6B00, 0 0 20px #FF6B00, 0 0 30px #FF6B00;
+}
+
+.halloween-purple-glow {
+  text-shadow: 0 0 10px #8B00FF, 0 0 20px #8B00FF, 0 0 30px #8B00FF;
+}
+
+.halloween-green-glow {
+  text-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px #FF6B00) drop-shadow(0 0 10px #FF6B00);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px #FF6B00) drop-shadow(0 0 30px #FF6B00);
+  }
+}
+
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  75% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes spooky-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px) rotate(-1deg);
+  }
+  75% {
+    transform: translateX(2px) rotate(1deg);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-flicker {
+  animation: flicker 3s ease-in-out infinite;
+}
+
+.animate-spooky-shake {
+  animation: spooky-shake 0.5s ease-in-out infinite;
+}
+
+/* Cobweb background pattern */
+.cobweb-bg {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(139, 0, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 107, 0, 0.1) 0%, transparent 50%);
+}
+
+/* Spooky cursor */
+body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E🎃%3C/text%3E%3C/svg%3E"), auto;
 }

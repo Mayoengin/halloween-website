@@ -8,36 +8,38 @@ export default {
     extend: {
       colors: {
         color: {
-          1: "#AC6AFF",
-          2: "#FFC876",
-          3: "#FF776F",
-          4: "#7ADB78",
-          5: "#858DFF",
-          6: "#FF98E2",
+          1: "#FF6B00", // Bright Orange
+          2: "#FFA500", // Pumpkin Orange
+          3: "#8B00FF", // Deep Purple
+          4: "#39FF14", // Toxic Green
+          5: "#6A0DAD", // Dark Purple
+          6: "#FF4500", // Blood Orange
         },
         stroke: {
-          1: "#26242C",
+          1: "#1a1a1a",
         },
         n: {
           1: "#FFFFFF",
-          2: "#CAC6DD",
-          3: "#ADA8C3",
-          4: "#757185",
-          5: "#3F3A52",
-          6: "#252134",
-          7: "#15131D",
-          8: "#0E0C15",
-          9: "#474060",
-          10: "#43435C",
-          11: "#1B1B2E",
-          12: "#2E2A41",
-          13: "#6C7275",
+          2: "#FFD700", // Gold
+          3: "#FFA500", // Orange
+          4: "#FF8C00", // Dark Orange
+          5: "#4B0082", // Indigo
+          6: "#2D1B4E", // Dark Purple
+          7: "#1a0a2e", // Very Dark Purple
+          8: "#0f0513", // Almost Black
+          9: "#8B00FF", // Purple
+          10: "#6A0DAD", // Dark Purple
+          11: "#1a0a2e", // Dark Purple
+          12: "#2D1B4E", // Purple
+          13: "#FF6B00", // Orange
         },
       },
       fontFamily: {
         sans: ["var(--font-sora)", ...fontFamily.sans],
         code: "var(--font-code)",
         grotesk: "var(--font-grotesk)",
+        creepster: "var(--font-creepster)",
+        nosifer: "var(--font-nosifer)",
       },
       letterSpacing: {
         tagline: ".15em",
@@ -69,7 +71,8 @@ export default {
       backgroundImage: {
         "radial-gradient": "radial-gradient(var(--tw-gradient-stops))",
         "conic-gradient":
-          "conic-gradient(from 225deg, #FFC876, #79FFF7, #9F53FF, #FF98E2, #FFC876)",
+          "conic-gradient(from 225deg, #FF6B00, #8B00FF, #39FF14, #FFA500, #FF6B00)",
+        "halloween-gradient": "linear-gradient(135deg, #FF6B00 0%, #8B00FF 50%, #000000 100%)",
       },
     },
   },

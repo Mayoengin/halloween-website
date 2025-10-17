@@ -7,11 +7,15 @@ import Hero from "./components/Hero";
 import Pricing from "./components/Pricing";
 import Roadmap from "./components/Roadmap";
 import Services from "./components/Services";
+import HalloweenDecorations from "./components/HalloweenDecorations";
+import HalloweenParticles from "./components/HalloweenParticles";
 
 const App = () => {
   return (
     <>
-      <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-hidden">
+      <HalloweenDecorations />
+      <HalloweenParticles />
+      <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-hidden cobweb-bg">
         <Header />
         <Hero />
         <Benefits />
