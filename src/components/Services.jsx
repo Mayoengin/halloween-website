@@ -11,6 +11,7 @@ const Services = () => {
   const [isChatActive, setIsChatActive] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [sessionId] = useState(() => 'session_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11));
 
   const handleGeneratingClick = () => {
     setIsChatActive(true);
@@ -24,27 +25,41 @@ const Services = () => {
       setInputMessage("");
 
       try {
-        // Send message to n8n webhook
-        const response = await fetch('http://localhost:5678/webhook-test/f44cc138-e3e8-409d-9c18-006af3c38e9d', {
+        // Send message to n8n webhook (production)
+        const response = await fetch('http://localhost:5678/webhook-test/b18226dd-29f2-4d0c-8cd8-5312caa7c614', {
           method: 'POST',
+          mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            message: userMessage,
-            timestamp: new Date().toISOString()
+            chatInput: userMessage,
+            sessionId: sessionId
           })
         });
 
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Response error:', errorText);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('JSON parse error:', parseError);
+          console.error('Response text:', responseText);
+          throw new Error('Invalid JSON response from server');
+        }
 
         // Add AI response to messages
+        // The response from n8n AI Agent typically has an "output" field
         setMessages(prev => [...prev, {
-          text: data.message || data.response || data.output || JSON.stringify(data),
+          text: data.output || data.message || data.response || JSON.stringify(data),
           sender: "ai"
         }]);
       } catch (error) {
