@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Section from "./Section";
 import Heading from "./Heading";
 import { service1, check } from "../assets";
@@ -7,6 +8,30 @@ import { Gradient } from "./design/Services";
 import Generating from "./Generating";
 
 const Services = () => {
+  const [isChatActive, setIsChatActive] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [inputMessage, setInputMessage] = useState("");
+
+  const handleGeneratingClick = () => {
+    setIsChatActive(true);
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (inputMessage.trim()) {
+      setMessages([...messages, { text: inputMessage, sender: "user" }]);
+      setInputMessage("");
+
+      // Simulate AI response after a short delay
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          text: "This is a simulated AI response. You can integrate your actual LLM here.",
+          sender: "ai"
+        }]);
+      }, 1000);
+    }
+  };
+
   return (
     <Section id="how-to-use">
       <div className="container">
@@ -17,7 +42,11 @@ const Services = () => {
 
         <div className="relative">
           <div className="relative z-1 flex items-center h-[39rem] mb-5 p-8 border border-n-1/10 rounded-3xl overflow-hidden lg:p-20 xl:h-[46rem]">
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none md:w-3/5 xl:w-auto">
+            {/* Background Image - Blurs when chat is active */}
+            <div
+              className={`absolute top-0 left-0 w-full h-full pointer-events-none md:w-3/5 xl:w-auto transition-all duration-700
+                ${isChatActive ? 'blur-md opacity-30' : 'blur-none opacity-100'}`}
+            >
               <img
                 className="w-full h-full object-cover md:object-right"
                 width={800}
@@ -27,7 +56,11 @@ const Services = () => {
               />
             </div>
 
-            <div className="relative z-1 max-w-[17rem] ml-auto">
+            {/* Original Content - Blurs when chat is active */}
+            <div
+              className={`relative z-1 max-w-[17rem] ml-auto transition-all duration-700
+                ${isChatActive ? 'blur-md opacity-30 pointer-events-none' : 'blur-none opacity-100'}`}
+            >
               <h4 className="h4 mb-4">Smartest AI</h4>
               <p className="body-2 mb-[3rem] text-n-3">
                 Product Name unlocks the potential of AI-powered applications
@@ -45,7 +78,62 @@ const Services = () => {
               </ul>
             </div>
 
-            <Generating className="absolute left-4 right-4 bottom-4 border-n-1/10 border lg:left-1/2 lg-right-auto lg:bottom-8 lg:-translate-x-1/2" />
+            {/* Chat Interface - Overlays on top when active */}
+            {isChatActive && (
+              <div className="absolute inset-0 z-10 flex flex-col p-8 lg:p-20 animate-fade-in">
+                <div className="flex-1 overflow-y-auto mb-6 space-y-4 flex flex-col">
+                  {messages.length === 0 ? (
+                    <div className="text-center text-n-1 flex flex-col items-center justify-center flex-1">
+                      <h4 className="h4 mb-2">Start a conversation</h4>
+                      <p className="body-2">Ask me anything!</p>
+                    </div>
+                  ) : (
+                    messages.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`flex ${
+                          message.sender === "user" ? "justify-end" : "justify-start"
+                        }`}
+                      >
+                        <div
+                          className={`p-4 rounded-lg max-w-[70%] ${
+                            message.sender === "user"
+                              ? "bg-color-1"
+                              : "bg-n-7/90 backdrop-blur-sm"
+                          }`}
+                        >
+                          <p className="body-2">{message.text}</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                <form onSubmit={handleSendMessage} className="relative flex-shrink-0">
+                  <input
+                    type="text"
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    placeholder="Type your message..."
+                    className="w-full px-6 py-4 pr-28 bg-n-7/90 backdrop-blur-sm border border-n-1/10 rounded-xl text-n-1 placeholder:text-n-4 focus:outline-none focus:border-color-1 transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 bg-color-1 rounded-lg hover:bg-color-1/80 transition-colors font-semibold"
+                  >
+                    Send
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* Generating Component - Only show when chat is not active */}
+            {!isChatActive && (
+              <Generating
+                className="absolute left-4 right-4 bottom-4 border-n-1/10 border lg:left-1/2 lg-right-auto lg:bottom-8 lg:-translate-x-1/2"
+                onClick={handleGeneratingClick}
+              />
+            )}
           </div>
 
 
