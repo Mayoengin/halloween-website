@@ -58,8 +58,10 @@ const Services = () => {
 
         // Add AI response to messages
         // The response from n8n AI Agent typically has an "output" field
+        const aiResponse = data.output || data.message || data.response || JSON.stringify(data);
+
         setMessages(prev => [...prev, {
-          text: data.output || data.message || data.response || JSON.stringify(data),
+          text: aiResponse,
           sender: "ai"
         }]);
       } catch (error) {
@@ -142,7 +144,7 @@ const Services = () => {
                               : "bg-n-7/90 backdrop-blur-sm"
                           }`}
                         >
-                          <p className="body-2">{message.text}</p>
+                          <p className="body-2 whitespace-pre-wrap">{message.text}</p>
                         </div>
                       </div>
                     ))
