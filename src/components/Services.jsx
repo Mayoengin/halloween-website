@@ -16,19 +16,44 @@ const Services = () => {
     setIsChatActive(true);
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (inputMessage.trim()) {
-      setMessages([...messages, { text: inputMessage, sender: "user" }]);
+      const userMessage = inputMessage;
+      setMessages([...messages, { text: userMessage, sender: "user" }]);
       setInputMessage("");
 
-      // Simulate AI response after a short delay
-      setTimeout(() => {
+      try {
+        // Send message to n8n webhook
+        const response = await fetch('http://localhost:5678/webhook-test/f44cc138-e3e8-409d-9c18-006af3c38e9d', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: userMessage,
+            timestamp: new Date().toISOString()
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Add AI response to messages
         setMessages(prev => [...prev, {
-          text: "This is a simulated AI response. You can integrate your actual LLM here.",
+          text: data.message || data.response || data.output || JSON.stringify(data),
           sender: "ai"
         }]);
-      }, 1000);
+      } catch (error) {
+        console.error('Error sending message to n8n:', error);
+        setMessages(prev => [...prev, {
+          text: `Error: ${error.message}. Check browser console for details.`,
+          sender: "ai"
+        }]);
+      }
     }
   };
 
