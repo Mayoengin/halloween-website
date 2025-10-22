@@ -11,6 +11,7 @@ const Services = () => {
   const [isChatActive, setIsChatActive] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [sessionId] = useState(() => 'session_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11));
 
   const handleGeneratingClick = () => {
@@ -23,6 +24,7 @@ const Services = () => {
       const userMessage = inputMessage;
       setMessages([...messages, { text: userMessage, sender: "user" }]);
       setInputMessage("");
+      setIsLoading(true);
 
       try {
         // Send message to n8n webhook (production)
@@ -70,6 +72,8 @@ const Services = () => {
           text: `Error: ${error.message}. Check browser console for details.`,
           sender: "ai"
         }]);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -130,24 +134,42 @@ const Services = () => {
                       <p className="body-2">Ask me anything!</p>
                     </div>
                   ) : (
-                    messages.map((message, index) => (
-                      <div
-                        key={index}
-                        className={`flex ${
-                          message.sender === "user" ? "justify-end" : "justify-start"
-                        }`}
-                      >
+                    <>
+                      {messages.map((message, index) => (
                         <div
-                          className={`p-4 rounded-lg max-w-[70%] ${
-                            message.sender === "user"
-                              ? "bg-color-1"
-                              : "bg-n-7/90 backdrop-blur-sm"
+                          key={index}
+                          className={`flex ${
+                            message.sender === "user" ? "justify-end" : "justify-start"
                           }`}
                         >
-                          <p className="body-2 whitespace-pre-wrap">{message.text}</p>
+                          <div
+                            className={`p-4 rounded-lg max-w-[70%] ${
+                              message.sender === "user"
+                                ? "bg-color-1"
+                                : "bg-n-7/90 backdrop-blur-sm"
+                            }`}
+                          >
+                            <p className="body-2 whitespace-pre-wrap">{message.text}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))}
+
+                      {/* Halloween-themed Loading Indicator */}
+                      {isLoading && (
+                        <div className="flex justify-start">
+                          <div className="p-4 rounded-lg bg-n-7/90 backdrop-blur-sm">
+                            <div className="flex items-center space-x-2">
+                              <div className="flex space-x-1">
+                                <span className="animate-bounce text-2xl" style={{ animationDelay: '0ms' }}>👻</span>
+                                <span className="animate-bounce text-2xl" style={{ animationDelay: '150ms' }}>🎃</span>
+                                <span className="animate-bounce text-2xl" style={{ animationDelay: '300ms' }}>💀</span>
+                              </div>
+                              <span className="body-2 text-n-3 animate-pulse">Summoning response...</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
 
