@@ -28,6 +28,10 @@ const Services = () => {
 
       try {
         // Send message to n8n webhook (production)
+        // Using AbortController to set a 30 second timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 300000000); // 30 seconds timeout
+
         const response = await fetch('https://mayoeidtelenet.app.n8n.cloud/webhook-test/50e40226-b9c1-411b-a015-59abc934b333', {
           method: 'POST',
           mode: 'cors',
@@ -37,8 +41,11 @@ const Services = () => {
           body: JSON.stringify({
             chatInput: userMessage,
             sessionId: sessionId
-          })
+          }),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           const errorText = await response.text();
